@@ -6,10 +6,10 @@ using System.Linq;
 using System;
 using Varollo.SpriteAnimator;
 
-public namespace Varollo.SpriteAnimator.Editor
+namespace Varollo.SpriteAnimator.Editor
 {
 	[CustomEditor(typeof(SpriteAnimation))]
-	public class SpriteAnimationEditor : Editor
+	public class SpriteAnimationEditor : UnityEditor.Editor
 	{
 		private SerializedProperty _loopProperty, _updateModeProperty, _framesProperty, _playbackSpeedProperty, _offsetPositionProperty;
 		private SpriteAnimation _target;

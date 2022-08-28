@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using Varollo.SpriteAnimation;
 
-public namespace Varollo.SpriteAnimator.Tests
+namespace Varollo.SpriteAnimator.Tests
 {	
 	public class SpriteAnimatorTests
 	{

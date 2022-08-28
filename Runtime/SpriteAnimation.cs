@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public namespace Varollo.SpriteAnimator
+namespace Varollo.SpriteAnimator
 {
 	[CreateAssetMenu(fileName = "New Sprite Animation", menuName = "Animation/Sprite Animation")]
 	public class SpriteAnimation : ScriptableObject, IEnumerable<SpriteAnimation.Frame>

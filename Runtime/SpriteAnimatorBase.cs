@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public namespace Varollo.SpriteAnimator
+namespace Varollo.SpriteAnimator
 {
 	public abstract class SpriteAnimatorBase : MonoBehaviour, IEnumerable<SpriteAnimation>
 	{
