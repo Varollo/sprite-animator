@@ -26,7 +26,7 @@ namespace Varollo.SpriteAnimator
 
 		public abstract int AnimationCount { get; }
 
-        private void Start()
+        protected virtual void Start()
         {
 			IsReady = Init();
         }
