@@ -14,6 +14,7 @@ namespace Varollo.SpriteAnimator
 			Running = 2
 		}
 
+		public virtual bool IsReady { get; protected set; } = false;
 		public virtual float AnimatorPlaybackSpeed { get; set; } = 1f;
 		public virtual PlaybackState AnimatorPlaybackState => IsRunning ? PlaybackState.Running : CurrentAnimationIndex >= 0 ? PlaybackState.Paused : PlaybackState.Stoped;
 		protected Coroutine RunningCoroutine { get; set; }
@@ -25,7 +26,12 @@ namespace Varollo.SpriteAnimator
 
 		public abstract int AnimationCount { get; }
 
-		public virtual bool PlayAnimation(int animationIndex, ulong frameCounter, bool flipX = false, bool flipY = false)
+        private void Start()
+        {
+			IsReady = Init();
+        }
+
+        public virtual bool PlayAnimation(int animationIndex, ulong frameCounter, bool flipX = false, bool flipY = false)
 		{
 			FrameCounter = frameCounter;
 			FlipX ^= flipX;
@@ -45,6 +51,8 @@ namespace Varollo.SpriteAnimator
 
 			return true;
 		}
+
+		public void PlayAnimation(int animationIndex) => PlayAnimation(animationIndex, FrameCounter);
 
 		public bool PlayAnimation(int animationIndex, bool flipX = false, bool flipY = false)
 		{
@@ -90,6 +98,7 @@ namespace Varollo.SpriteAnimator
 			return index >= 0 && index < AnimationCount;
 		}
 
+		public abstract bool Init();
 		public abstract SpriteAnimation GetAnimation(int animationIndex);
 		public abstract object UpdateFrame(int animationIndex, ulong frameCounter);
 		public abstract IEnumerator<SpriteAnimation> GetEnumerator();

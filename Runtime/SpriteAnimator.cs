@@ -12,29 +12,36 @@ namespace Varollo.SpriteAnimator
 		[SerializeField][Min(0)] private float _animatorPlaybackSpeed = 1f;
 		[SerializeField] private List<SpriteAnimation> _animations = new List<SpriteAnimation>();
 
-		public override float AnimatorPlaybackSpeed { get => _animatorPlaybackSpeed; set => _animatorPlaybackSpeed = Mathf.Max(0, value); }
+		private Vector3 _originalRendererPosition;
+
+        public override float AnimatorPlaybackSpeed { get => _animatorPlaybackSpeed; set => _animatorPlaybackSpeed = Mathf.Max(0, value); }
 		public override bool FlipX { get => ValidateRenderer().flipX; set => ValidateRenderer().flipX = value; }
 		public override bool FlipY { get => ValidateRenderer().flipY; set => ValidateRenderer().flipY = value; }
 		public override int AnimationCount => _animations.Count;
 
-		private Vector3 _originalRendererPosition;
+        public override bool Init()
+        {
+			if (IsReady) return false;
 
-		private void Start()
-		{
 			ValidateRenderer();
 			_originalRendererPosition = _targetRenderer.transform.localPosition;
-
-			if (_playOnStart && _animations.Count > 0)
+			if (_playOnStart && _animations.Count > 0 && isActiveAndEnabled)
 				StartPlayback();
+
+			IsReady = true;
+			return IsReady;
 		}
 
-		public override object UpdateFrame(int animationIndex, ulong frameCounter)
+        public override object UpdateFrame(int animationIndex, ulong frameCounter)
 		{
+			if (!IsReady)
+				return null;
+
 			var animation = _animations[animationIndex];
 			var frame = animation.GetFrameWrapped(frameCounter);
 
 			_targetRenderer.sprite = frame.Sprite;
-			_targetRenderer.transform.localPosition = animation.GetOffset(frame);
+			_targetRenderer.transform.localPosition = _originalRendererPosition + animation.GetOffset(frame);
 
 			return animation.YieldFrame(frame, AnimatorPlaybackSpeed);
 		}

@@ -60,17 +60,6 @@ namespace Varollo.SpriteAnimator
 		private float _childUpdateCounter;
 		private AnimatorUpdateMode _compositeUpdateMode = AnimatorUpdateMode.Normal;
 
-		private void Start()
-		{
-			if (_autoDetectChildren)
-				CheckForChildren(_detectInactiveChildren);
-
-			UpdateAnimationConfig();
-
-			if (_playOnStart)
-				PlayAnimation(0);
-		}
-
 		private void Update()
 		{
 			if(_autoDetectChildren && _autoUpdateChildren && Time.time >= _childUpdateCounter)
@@ -87,7 +76,23 @@ namespace Varollo.SpriteAnimator
 				CheckForChildren(_detectInactiveChildren);
 		}
 
-		public override bool PlayAnimation(int animationIndex, ulong frameCount, bool flipX = false, bool flipY = false)
+        public override bool Init()
+        {
+			if (IsReady) return false;
+
+			if (_autoDetectChildren)
+				CheckForChildren(_detectInactiveChildren);
+
+			UpdateAnimationConfig();
+
+			if (_playOnStart && isActiveAndEnabled)
+				PlayAnimation(0);
+
+			IsReady = true;
+			return IsReady;
+		}
+
+        public override bool PlayAnimation(int animationIndex, ulong frameCount, bool flipX = false, bool flipY = false)
 		{
 			bool pass = base.PlayAnimation(animationIndex, frameCount, flipX, flipY);
 			foreach (var anim in ChildAnimators)
@@ -103,6 +108,10 @@ namespace Varollo.SpriteAnimator
 			for (int i = 0; i < _childAnimators.Count; i++)
 			{
 				var animator = _childAnimators[i];
+
+				if (!animator.IsReady)
+					continue;
+
 				var frame = animator.GetAnimation(animationIndex % animator.AnimationCount).GetFrameWrapped(frameCounter);
 
 				if (frame.Duration > longestDuration || longestFrameAnimator == null)
@@ -177,7 +186,7 @@ namespace Varollo.SpriteAnimator
 		{
 			_animationCount = _childAnimators.Sum(anim => anim.AnimationCount);
 			_compositeUpdateMode = _childAnimators.Any(anim => anim.Any(ation => ation.UpdateMode == AnimatorUpdateMode.UnscaledTime)) ? AnimatorUpdateMode.UnscaledTime : AnimatorUpdateMode.Normal;
-			_childAnimators.ForEach(anim => anim.enabled = false);
+			_childAnimators.ForEach(anim => { anim.enabled = false; anim.Init(); });
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
