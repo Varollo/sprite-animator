@@ -1,0 +1,14 @@
+{
+  "name": "com.varollo.sprite-animator",
+  "version": "1.1.0",
+  "displayName": "Sprite Animator for Unity",
+  "description": "This package is designed to work with sprite sheet animation in unity.",
+  "unity": "2021.0",
+  "keywords": ["animation","2d","sprite"],
+  "author": {
+    "name": "Gabriel Carollo (Varollo)",
+    "email": "rimoldi98@gmail.com",
+    "url": "http://varollo.github.io"
+  },
+  "type": "tool"
+}
